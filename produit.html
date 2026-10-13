@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiche produit – FootStore</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#111}
+  a{color:inherit}
+  header{background:#111;color:#fff;padding:0 20px;position:sticky;top:0;z-index:20}
+  .nav{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+  a.logo{font-size:1.4rem;font-weight:800;letter-spacing:-1px;color:#fff;text-decoration:none}
+  .logo span{color:#e8ff00}
+  a.cart{background:#222;border-radius:99px;padding:8px 16px;font-size:.9rem;color:#fff;text-decoration:none}
+  .cart b{color:#e8ff00}
+  main{max-width:1200px;margin:auto;padding:18px 20px 60px}
+  .crumbs{font-size:.85rem;color:#777;margin-bottom:16px}
+  .crumbs a{text-decoration:none;color:#555}.crumbs a:hover{text-decoration:underline}
+  .crumbs i{margin:0 6px;font-style:normal}
+
+  .top{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
+  .gal{background:#fff;border-radius:14px;padding:18px;position:sticky;top:78px}
+  .stage{position:relative;height:520px;display:flex;align-items:center;justify-content:center;cursor:zoom-in;overflow:hidden;border-radius:10px}
+  .stage img{width:100%;height:100%;object-fit:contain;transition:transform .2s}
+  .stage:hover img{transform:scale(1.06)}
+  .nv{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer;font-size:1.2rem}
+  .nv.l{left:6px}.nv.r{right:6px}
+  .thumbs{display:flex;gap:10px;margin-top:12px;justify-content:center;flex-wrap:wrap}
+  .thumbs img{width:68px;height:68px;object-fit:contain;border:2px solid #eee;border-radius:8px;cursor:pointer;padding:4px;background:#fff}
+  .thumbs img.on,.thumbs img:hover{border-color:#111}
+  .hint{text-align:center;font-size:.75rem;color:#999;margin-top:8px}
+
+  .info{background:#fff;border-radius:14px;padding:26px}
+  .clubl{font-size:.8rem;text-transform:uppercase;letter-spacing:.6px;color:#0b6e4f;font-weight:700;text-decoration:none}
+  h1{font-size:1.55rem;line-height:1.25;margin:6px 0 10px}
+  .badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .b{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:.4px;background:#111;color:#fff}
+  .b.j{background:#0b6e4f}.b.bb{background:#c2410c}.b.f{background:#a21caf}.b.g{background:#e5e7eb;color:#333}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.83rem;color:#777;margin-bottom:14px;align-items:center}
+  .stars{color:#f59e0b;letter-spacing:1px}
+  .price{font-size:2.1rem;font-weight:900}
+  .price .old{font-size:1.05rem;font-weight:500;color:#999}
+  .price .off{font-size:.8rem;font-weight:800;background:#dc2626;color:#fff;padding:3px 9px;border-radius:99px;vertical-align:middle}
+  .inst{font-size:.85rem;color:#666;margin:2px 0 14px}
+  .stock{display:flex;align-items:center;gap:8px;font-size:.9rem;margin-bottom:16px;font-weight:600}
+  .dot{width:10px;height:10px;border-radius:50%;background:#16a34a}
+  .stock.low .dot{background:#f59e0b}.stock.low{color:#92400e}
+  .lbl{font-size:.85rem;font-weight:700;margin:16px 0 8px;display:flex;justify-content:space-between;align-items:center}
+  .lbl button{background:none;border:0;color:#0b6e4f;font-size:.82rem;cursor:pointer;text-decoration:underline}
+  .vars{display:flex;gap:8px;flex-wrap:wrap}
+  .var{display:flex;align-items:center;gap:8px;border:1.5px solid #ddd;border-radius:10px;padding:6px 12px 6px 6px;text-decoration:none;font-size:.82rem;font-weight:600}
+  .var:hover{border-color:#111}
+  .var img{width:38px;height:38px;object-fit:contain}
+  .sizes{display:flex;gap:8px;flex-wrap:wrap}
+  .sz{border:1.5px solid #ddd;border-radius:8px;padding:10px 16px;cursor:pointer;background:#fff;font-weight:600;font-size:.92rem;position:relative}
+  .sz:hover:not(:disabled),.sz.sel{border-color:#111;background:#111;color:#fff}
+  .sz:disabled{color:#bbb;background:#f6f6f6;cursor:not-allowed;text-decoration:line-through}
+  .sz small{display:block;font-size:.62rem;font-weight:600;color:#c2410c}
+  .sz.sel small,.sz:hover:not(:disabled) small{color:#fbbf24}
+  .err{color:#b91c1c;font-size:.85rem;min-height:1.2em;margin-top:6px}
+  .flock{margin-top:14px;border:1.5px dashed #0b6e4f;border-radius:10px;padding:12px}
+  .flockchk{display:flex;align-items:center;gap:8px;font-size:.9rem;font-weight:600;cursor:pointer}
+  .flockchk b{color:#0b6e4f}
+  .flockchk input{width:17px;height:17px}
+  .flockf{display:none;grid-template-columns:2fr 1fr;gap:10px;margin-top:10px}
+  .flockf.on{display:grid}
+  .flockf input{padding:9px 11px;border:1px solid #ddd;border-radius:8px;font-size:.92rem;width:100%;text-transform:uppercase}
+  .flockf small{display:block;color:#999;font-size:.72rem;margin-top:3px}
+  .buy{display:flex;gap:10px;margin-top:12px}
+  .qty{display:flex;border:1.5px solid #ddd;border-radius:10px;overflow:hidden}
+  .qty button{width:38px;border:0;background:#fff;font-size:1.2rem;cursor:pointer}
+  .qty button:hover{background:#f0f0f0}
+  .qty input{width:44px;text-align:center;border:0;font-size:1rem;font-weight:700;-moz-appearance:textfield}
+  .qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none}
+  .add{flex:1;background:#111;color:#fff;border:0;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;padding:14px}
+  .add:hover{background:#333}
+  .fav,.share{width:50px;border:1.5px solid #ddd;background:#fff;border-radius:10px;font-size:1.25rem;cursor:pointer}
+  .fav.on{color:#dc2626;border-color:#dc2626}
+  .perks{margin-top:18px;border-top:1px solid #eee}
+  .perks div{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #eee;font-size:.88rem}
+  .perks b{display:block}.perks span{color:#777;font-size:.82rem}
+  .ico{font-size:1.2rem;width:26px;text-align:center}
+
+  .tabs{background:#fff;border-radius:14px;margin-top:28px;overflow:hidden}
+  .tabbar{display:flex;border-bottom:1px solid #eee;overflow-x:auto}
+  .tabbar button{padding:16px 22px;border:0;background:none;font-size:.95rem;font-weight:700;cursor:pointer;color:#888;border-bottom:3px solid transparent;white-space:nowrap}
+  .tabbar button.on{color:#111;border-color:#111}
+  .pane{display:none;padding:26px;line-height:1.7;font-size:.95rem;color:#333}
+  .pane.on{display:block}
+  .pane p{margin-bottom:12px}
+  .spec{display:grid;grid-template-columns:200px 1fr;gap:0;max-width:640px}
+  .spec div{padding:10px 0;border-bottom:1px solid #eee}
+  .spec div:nth-child(odd){color:#888}
+  .note{font-size:.8rem;color:#999;margin-top:14px}
+  .rv-sum{display:flex;gap:18px;align-items:center;margin-bottom:18px}
+  .rv-sum .big{font-size:2.4rem;font-weight:900}
+  .rv{border-bottom:1px solid #eee;padding:14px 0}
+  .rv h4{font-size:.95rem}.rv small{color:#999}
+  form.rvf{background:#f7f7f7;border-radius:12px;padding:18px;margin-top:18px;display:grid;gap:10px;max-width:560px}
+  form.rvf input,form.rvf textarea,form.rvf select{padding:10px 12px;border:1px solid #ddd;border-radius:8px;font:inherit;background:#fff}
+  form.rvf button{background:#111;color:#fff;border:0;border-radius:8px;padding:12px;font-weight:700;cursor:pointer}
+
+  h2.sec{font-size:1.3rem;margin:34px 0 14px}
+  .rail{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+  .mini{background:#fff;border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:.15s}
+  .mini:hover{transform:translateY(-3px)}
+  .mini img{width:100%;height:170px;object-fit:contain;padding:8px;border-bottom:1px solid #eee}
+  .mini div{padding:10px 12px;font-size:.82rem}.mini b{display:block;margin-top:4px;font-size:.95rem}
+  .mini span{color:#888;font-size:.72rem;text-transform:uppercase}
+
+  .lb,.sg{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+  .lb.open,.sg.open{display:flex}
+  .lb img{max-width:min(92vw,900px);max-height:90vh;background:#fff;border-radius:10px}
+  .sgbox{background:#fff;border-radius:14px;padding:26px;max-width:520px;width:100%;position:relative}
+  .sgbox h3{margin-bottom:12px}
+  table{width:100%;border-collapse:collapse;font-size:.92rem}
+  th,td{text-align:left;padding:9px 6px;border-bottom:1px solid #eee}th{color:#888;font-weight:600}
+  .xx{position:absolute;top:8px;right:14px;background:none;border:0;font-size:2rem;cursor:pointer;color:#555}
+  .lb .xx{color:#fff}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,120px);background:#111;color:#fff;padding:14px 22px;border-radius:12px;z-index:70;transition:.3s;display:flex;gap:16px;align-items:center;font-size:.95rem}
+  .toast.show{transform:translate(-50%,0)}
+  .toast a{color:#e8ff00;font-weight:700}
+  .nf{text-align:center;padding:80px 20px}
+  @media(max-width:860px){.top{grid-template-columns:1fr}.gal{position:static}.stage{height:380px}.spec{grid-template-columns:130px 1fr}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+  <a class="logo" href="index.html">Foot<span>Store</span></a>
+  <a class="cart" href="panier.html">Panier : <b id="cartCount">0</b></a>
+</div></header>
+
+<main id="app"></main>
+
+<div class="lb" id="lb"><button class="xx" id="lbx" aria-label="Fermer">×</button><img id="lbimg" alt=""></div>
+<div class="sg" id="sg"><div class="sgbox"><button class="xx" id="sgx" aria-label="Fermer" style="color:#555">×</button><div id="sgc"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="products.js"></script>
+<script src="menu.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const id=new URLSearchParams(location.search).get("id");
+const p=byId(id);
+updateCartBadge();
+
+if(!p){
+  $("app").innerHTML='<div class="nf"><h1>Maillot introuvable</h1><p style="margin:12px 0 20px;color:#777">Ce produit n\'existe pas ou a été retiré.</p><a href="index.html">← Retour au catalogue</a></div>';
+}else init();
+
+function init(){
+  document.title=p.name+" – FootStore";
+  const ownRv=()=>{try{return JSON.parse(localStorage.getItem("fs_rv_"+p.id)||"[]")}catch(e){return[]}};
+  const reviews=()=>[...seedReviews(p),...ownRv()].sort((a,b)=>b.ts-a.ts);
+  const avg=()=>{const r=reviews();return r.length?r.reduce((a,x)=>a+x.note,0)/r.length:0};
+  const stars=n=>"★".repeat(Math.round(n))+"☆".repeat(5-Math.round(n));
+  const catTag=({Junior:'<span class="b j">Junior</span>',"Bébé":'<span class="b bb">Bébé</span>',Femme:'<span class="b f">Femme</span>'})[p.cat]||"";
+  const vars=variantsOf(p), same=sameClub(p).slice(0,10);
+  const others=P.filter(x=>x.type===p.type&&x.cat===p.cat&&x.club!==p.club&&x.id!==p.id).slice((p.n*3)%20,(p.n*3)%20+5);
+  let cur=0, size=null, qty=1;
+
+  $("app").innerHTML=`
+  <div class="crumbs"><a href="index.html">Accueil</a><i>›</i><a href="index.html?club=${encodeURIComponent(p.club)}">${esc(p.club)}</a><i>›</i>${esc(p.name)}</div>
+  <div class="top">
+    <div class="gal">
+      <div class="stage" id="stage">
+        ${p.files.length>1?'<button class="nv l" id="pv" aria-label="Précédent">‹</button><button class="nv r" id="nx" aria-label="Suivant">›</button>':""}
+        <img id="main" src="${encodeURI(p.files[0])}" alt="${esc(p.name)}">
+      </div>
+      ${p.files.length>1?`<div class="thumbs">${p.files.map((f,i)=>`<img data-i="${i}" class="${i?"":"on"}" src="${encodeURI(f)}" alt="Vue ${i+1}">`).join("")}</div>`:""}
+      <div class="hint">Clique sur l'image pour agrandir</div>
+    </div>
+
+    <div class="info">
+      <a class="clubl" href="index.html?club=${encodeURIComponent(p.club)}">${esc(p.club)}</a>
+      <h1>${esc(p.name)}</h1>
+      <div class="badges"><span class="b">${esc(p.kind)}</span>${catTag}${p.season?`<span class="b g">${p.season}</span>`:""}</div>
+      <div class="meta"><span class="stars" id="topStars"></span><a href="#avis" id="topRv" style="color:#777"></a><span>Réf. ${p.sku}</span></div>
+      <div class="price">${eur(p.price)}${p.oldPrice>p.price?` <s class="old">${eur(p.oldPrice)}</s> <span class="off">-${Math.round((1-p.price/p.oldPrice)*100)}%</span>`:""}</div>
+      <div class="inst">ou 3 × ${eur(p.price/3)} sans frais · TVA incluse</div>
+      <div class="stock ${p.stock<=5?"low":""}"><span class="dot"></span>${p.stock<=2?`Derniers exemplaires (${p.stock} en stock)`:p.stock<=5?`Stock limité : plus que ${p.stock}`:"En stock – expédié sous 24 h"}</div>
+
+      ${vars.length?`<div class="lbl">Autres versions de ce maillot</div><div class="vars">${vars.map(v=>`<a class="var" href="produit.html?id=${v.id}"><img src="${encodeURI(v.file)}" alt=""><span>${v.cat}<br><span style="color:#888;font-weight:500">${eur(v.price)}</span></span></a>`).join("")}</div>`:""}
+
+      <div class="lbl"><span>Taille <span id="selSz" style="font-weight:500;color:#777"></span></span><button id="sgb">Guide des tailles</button></div>
+      <div class="sizes" id="sizes">${p.sizes.map(s=>{const k=sizeStock(p,s);return `<button class="sz" data-s="${s}" ${k===0?"disabled":""}>${s}${k>0&&k<=3?`<small>${k} restant${k>1?"s":""}</small>`:""}</button>`}).join("")}</div>
+      <div class="err" id="err"></div>
+
+      <div class="flock">
+        <label class="flockchk"><input type="checkbox" id="fkOn"> Ajouter un flocage personnalisé <b>gratuit</b></label>
+        <div class="flockf" id="flockf">
+          <div><input id="fkName" placeholder="Nom à floquer" maxlength="${FLOCK_NAME_MAX}"><small>12 caractères max</small></div>
+          <div><input id="fkNum" placeholder="N°" inputmode="numeric" maxlength="${FLOCK_NUM_MAX}"><small>1 ou 2 chiffres</small></div>
+        </div>
+      </div>
+
+      <div class="buy">
+        <div class="qty"><button id="qm" aria-label="Moins">−</button><input id="q" value="1" inputmode="numeric" aria-label="Quantité"><button id="qp" aria-label="Plus">+</button></div>
+        <button class="add" id="add">Ajouter au panier</button>
+        <button class="fav ${Fav.has(p.id)?"on":""}" id="fav" aria-label="Favori" title="Ajouter aux favoris">${Fav.has(p.id)?"♥":"♡"}</button>
+        <button class="share" id="share" aria-label="Copier le lien" title="Copier le lien">⧉</button>
+      </div>
+
+      <div class="perks">
+        <div><span class="ico">🚚</span><p><b>Livraison offerte</b><span>Sans minimum d'achat · 2 à 4 jours ouvrés</span></p></div>
+        <div><span class="ico">↩</span><p><b>Retour gratuit sous 30 jours</b><span>Maillot non porté, avec son étiquette</span></p></div>
+        <div><span class="ico">🔒</span><p><b>Paiement sécurisé</b><span>Carte bancaire, PayPal (boutique de démonstration)</span></p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tabbar" id="tabbar">
+      <button data-t="desc" class="on">Description</button><button data-t="car">Caractéristiques</button><button data-t="liv">Livraison &amp; retours</button><button data-t="avis" id="avis">Avis</button>
+    </div>
+    <div class="pane on" id="t-desc">${longDesc(p).map(x=>`<p>${esc(x)}</p>`).join("")}<p class="note">Fiche produit de démonstration réalisée pour un projet scolaire. Les photos sont fournies par l'auteur du site.</p></div>
+    <div class="pane" id="t-car">
+      <div class="spec">
+        <div>Club / sélection</div><div>${esc(p.club)}</div>
+        <div>Type de maillot</div><div>${esc(p.kind)}</div>
+        <div>Catégorie</div><div>${CAT_LABEL[p.cat]}</div>
+        ${p.season?`<div>Saison</div><div>${p.season}</div>`:""}
+        <div>Tailles proposées</div><div>${p.sizes.join(", ")}</div>
+        <div>Matière principale</div><div>Polyester (indicatif)</div>
+        <div>Entretien</div><div>Lavage en machine à 30 °C, ne pas repasser sur l'écusson, ne pas utiliser de sèche-linge</div>
+        <div>Référence</div><div>${p.sku}</div>
+      </div>
+      <p class="note">Informations indicatives de démonstration.</p>
+    </div>
+    <div class="pane" id="t-liv">
+      <p><b>Livraison.</b> Expédition sous 24 h pour les articles en stock. Livraison standard en 2 à 4 jours ouvrés, offerte sans minimum d'achat.</p>
+      <p><b>Retours.</b> Tu as 30 jours pour retourner ton maillot, non porté et avec son étiquette. Le retour est gratuit.</p>
+      <p><b>Échanges de taille.</b> Une taille qui ne va pas ? Fais un échange sans frais.</p>
+      <p class="note">Conditions de la boutique de démonstration.</p>
+    </div>
+    <div class="pane" id="t-avis"></div>
+  </div>
+
+  ${same.length?`<h2 class="sec">Plus de maillots ${esc(p.club)}</h2><div class="rail">${same.map(mini).join("")}</div>`:""}
+  ${others.length?`<h2 class="sec">Tu aimeras aussi</h2><div class="rail">${others.map(mini).join("")}</div>`:""}`;
+
+  function mini(x){return `<a class="mini" href="produit.html?id=${x.id}"><img src="${encodeURI(x.file)}" alt="${esc(x.name)}" loading="lazy"><div><span>${esc(x.kind)}${x.cat!=="Adulte"?" · "+x.cat:""}</span>${esc(x.club)}<b>${eur(x.price)}</b></div></a>`}
+
+  // Galerie
+  const show=i=>{cur=(i+p.files.length)%p.files.length;$("main").src=encodeURI(p.files[cur]);document.querySelectorAll(".thumbs img").forEach(t=>t.classList.toggle("on",+t.dataset.i===cur))};
+  document.querySelectorAll(".thumbs img").forEach(t=>t.onclick=()=>show(+t.dataset.i));
+  if($("pv")){$("pv").onclick=e=>{e.stopPropagation();show(cur-1)};$("nx").onclick=e=>{e.stopPropagation();show(cur+1)};}
+  $("stage").onclick=()=>{$("lbimg").src=$("main").src;$("lb").classList.add("open")};
+  $("lb").onclick=e=>{if(e.target.id!=="lbimg")$("lb").classList.remove("open")};
+
+  // Tailles
+  document.querySelectorAll(".sz").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(".sz").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");size=b.dataset.s;
+    $("selSz").textContent="· "+size;$("err").textContent="";
+  });
+  // Guide des tailles
+  $("sgb").onclick=()=>{
+    $("sgc").innerHTML=`<h3>Guide des tailles – ${CAT_LABEL[p.cat]}</h3><table><tr><th>Taille</th><th>Tour de poitrine (cm)</th><th>Morphologie</th></tr>${GUIDE[p.cat].map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</table><p class="note">Tableau indicatif. Entre deux tailles, prends la plus grande.</p>`;
+    $("sg").classList.add("open");
+  };
+  $("sgx").onclick=()=>$("sg").classList.remove("open");
+  $("sg").onclick=e=>{if(e.target.id==="sg")$("sg").classList.remove("open")};
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("lb").classList.remove("open");$("sg").classList.remove("open")}
+    if($("lb").classList.contains("open")&&p.files.length>1){if(e.key==="ArrowRight"){show(cur+1);$("lbimg").src=$("main").src}if(e.key==="ArrowLeft"){show(cur-1);$("lbimg").src=$("main").src}}});
+
+  // Quantité
+  const setQ=v=>{qty=Math.max(1,Math.min(10,v|0||1));$("q").value=qty};
+  $("qm").onclick=()=>setQ(qty-1);$("qp").onclick=()=>setQ(qty+1);$("q").onchange=()=>setQ(parseInt($("q").value));
+
+  // Flocage gratuit
+  $("fkOn").onchange=()=>{$("flockf").classList.toggle("on",$("fkOn").checked);$("err").textContent=""};
+
+  // Panier
+  function toast(html){const t=$("toast");t.innerHTML=html;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),3500)}
+  $("add").onclick=()=>{
+    if(!size){$("err").textContent="Choisis une taille avant d'ajouter au panier.";$("sizes").scrollIntoView({block:"center",behavior:"smooth"});return}
+    let flock=null;
+    if($("fkOn").checked){
+      const name=$("fkName").value,num=$("fkNum").value;
+      if(!flockValid(name,num)){$("err").textContent="Pour le flocage, indique un nom et un numéro (1 ou 2 chiffres).";$("flockf")[0]?.scrollIntoView({block:"center",behavior:"smooth"});return}
+      flock={name:name.trim(),number:num.trim()};
+    }
+    Cart.add(p.id,size,qty,flock);updateCartBadge();
+    toast(`✓ ${qty} × ${esc(p.club)} (${esc(size)})${flock?` – ${esc(flockLabel(flock))}`:""} ajouté <a href="panier.html">Voir le panier</a>`);
+  };
+  // Favori + partage
+  $("fav").onclick=()=>{const on=Fav.toggle(p.id);$("fav").classList.toggle("on",on);$("fav").textContent=on?"♥":"♡";toast(on?"Ajouté aux favoris":"Retiré des favoris")};
+  $("share").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);toast("Lien copié")}catch(e){toast("Copie impossible ici")}};
+
+  // Onglets
+  document.querySelectorAll("#tabbar button").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll("#tabbar button").forEach(x=>x.classList.toggle("on",x===b));
+    document.querySelectorAll(".pane").forEach(x=>x.classList.toggle("on",x.id==="t-"+b.dataset.t));
+  });
+  $("topRv").onclick=e=>{e.preventDefault();$("avis").click();$("avis").scrollIntoView({behavior:"smooth",block:"center"})};
+
+  // Avis (enregistrés uniquement dans ce navigateur)
+  function renderRv(){
+    const r=reviews(),a=avg();
+    $("topStars").textContent=r.length?stars(a):"☆☆☆☆☆";
+    $("topRv").textContent=r.length?`${a.toFixed(1)} (${r.length} avis)`:"Aucun avis";
+    $("avis").textContent=`Avis (${r.length})`;
+    $("t-avis").innerHTML=`
+      ${r.length?`<div class="rv-sum"><div class="big">${a.toFixed(1)}</div><div><div class="stars">${stars(a)}</div><small style="color:#999">${r.length} avis</small></div></div>`:'<p style="color:#888">Aucun avis pour ce maillot. Sois le premier à donner ton avis !</p>'}
+      ${r.map(x=>`<div class="rv"><div class="stars">${stars(x.note)}</div><h4>${esc(x.nom)} <small>· ${esc(x.date)}</small></h4><p>${esc(x.txt)}</p></div>`).join("")}
+      <form class="rvf" id="rvf"><b>Donner mon avis</b>
+        <input name="nom" placeholder="Ton prénom" maxlength="30" required>
+        <select name="note" aria-label="Note"><option value="5">★★★★★ Excellent</option><option value="4">★★★★☆ Bien</option><option value="3">★★★☆☆ Moyen</option><option value="2">★★☆☆☆ Décevant</option><option value="1">★☆☆☆☆ Mauvais</option></select>
+        <textarea name="txt" rows="3" placeholder="Ton commentaire" maxlength="500" required></textarea>
+        <button>Publier mon avis</button>
+        <small style="color:#999">L'avis est enregistré uniquement dans ce navigateur.</small>
+      </form>`;
+    $("rvf").onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);
+      const n=ownRv();n.push({nom:f.get("nom").trim(),note:+f.get("note"),txt:f.get("txt").trim(),date:new Date().toLocaleDateString("fr-FR"),ts:Date.now()});
+      try{localStorage.setItem("fs_rv_"+p.id,JSON.stringify(n))}catch(x){}
+      renderRv();$("avis").click();};
+  }
+  renderRv();
+}
+</script>
+</body>
+</html>

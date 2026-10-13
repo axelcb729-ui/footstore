@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panier – FootStore</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#111}
+  a{color:inherit}
+  header{background:#111;color:#fff;padding:0 20px}
+  .nav{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+  a.logo{font-size:1.4rem;font-weight:800;letter-spacing:-1px;color:#fff;text-decoration:none}
+  .logo span{color:#e8ff00}
+  a.cart{background:#222;border-radius:99px;padding:8px 16px;font-size:.9rem;color:#fff;text-decoration:none}
+  .cart b{color:#e8ff00}
+  main{max-width:1100px;margin:auto;padding:24px 20px 60px}
+  h1{font-size:1.6rem;margin-bottom:18px}
+  .wrap{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
+  .items{background:#fff;border-radius:14px;padding:6px 20px}
+  .it{display:grid;grid-template-columns:96px 1fr auto;gap:16px;padding:16px 0;border-bottom:1px solid #eee;align-items:center}
+  .it:last-child{border:0}
+  .it img{width:96px;height:96px;object-fit:contain;border:1px solid #eee;border-radius:8px;padding:4px}
+  .it h3{font-size:.95rem;margin-bottom:4px}.it h3 a{text-decoration:none}
+  .it small{color:#777;display:block;margin-bottom:8px}
+  .fk{color:#0b6e4f;font-weight:700}
+  .qty{display:inline-flex;border:1.5px solid #ddd;border-radius:8px;overflow:hidden}
+  .qty button{width:32px;border:0;background:#fff;font-size:1.1rem;cursor:pointer}
+  .qty span{min-width:34px;text-align:center;line-height:34px;font-weight:700}
+  .rm{background:none;border:0;color:#b91c1c;font-size:.82rem;cursor:pointer;margin-left:14px;text-decoration:underline}
+  .pr{font-weight:800;font-size:1.05rem;text-align:right}
+  .sum{background:#fff;border-radius:14px;padding:22px;position:sticky;top:20px}
+  .sum h2{font-size:1.1rem;margin-bottom:14px}
+  .row{display:flex;justify-content:space-between;padding:8px 0;font-size:.95rem}
+  .row.t{border-top:1px solid #eee;margin-top:6px;padding-top:14px;font-size:1.25rem;font-weight:900}
+  .bar{height:8px;background:#eee;border-radius:99px;overflow:hidden;margin:6px 0 4px}
+  .bar i{display:block;height:100%;background:#16a34a}
+  .free{font-size:.82rem;color:#555;margin-bottom:10px}
+  .pay{width:100%;margin-top:14px;background:#111;color:#fff;border:0;border-radius:10px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer}
+  .pay:hover{background:#333}
+  .clear{display:block;margin:12px auto 0;background:none;border:0;color:#777;font-size:.82rem;cursor:pointer;text-decoration:underline}
+  .empty{background:#fff;border-radius:14px;padding:60px 20px;text-align:center}
+  .empty p{color:#777;margin:10px 0 20px}
+  .empty a{display:inline-block;background:#111;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:700}
+  .ok{background:#ecfdf5;border:1px solid #6ee7b7;color:#065f46;padding:18px;border-radius:12px;margin-bottom:16px;display:none}
+  .note{font-size:.78rem;color:#999;margin-top:10px;text-align:center}
+  @media(max-width:820px){.wrap{grid-template-columns:1fr}.it{grid-template-columns:72px 1fr}.it img{width:72px;height:72px}.pr{grid-column:2;text-align:left}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+  <a class="logo" href="index.html">Foot<span>Store</span></a>
+  <a class="cart" href="panier.html">Panier : <b id="cartCount">0</b></a>
+</div></header>
+<main>
+  <h1>Mon panier</h1>
+  <div class="ok" id="ok"></div>
+  <div id="app"></div>
+</main>
+<script src="products.js"></script>
+<script src="menu.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+// Liens vers lesquels renvoyer selon le sous-total exact du panier
+const CHECKOUT_LINKS={
+  10:"https://t.trklinkx.com/click?pid=5417&offer_id=12829&sub3=Foot",
+  20:"https://t.trklinkx.com/click?pid=5417&offer_id=13057&sub3=Foot",
+  30:"https://t.trklinkx.com/click?pid=5417&offer_id=12324&sub3=Foot",
+  40:"https://t.trklinkx.com/click?pid=5417&offer_id=12354&sub3=Foot",
+  50:"https://t.trklinkx.com/click?pid=5417&offer_id=12355&sub3=Foot",
+  80:"https://t.trklinkx.com/click?pid=5417&offer_id=12541&sub3=Foot",
+  100:"https://t.trklinkx.com/click?pid=5417&offer_id=12913&sub3=Foot"
+};
+// Prix remisé selon le sous-total du panier
+const EXACT_DISCOUNT={10:9.99,20:19.99,30:29.95,40:39.99,50:49.99,80:69.99,100:99.99};
+function discountedTotal(sub){
+  if(EXACT_DISCOUNT[sub]!=null)return EXACT_DISCOUNT[sub];
+  if(sub>=80&&sub<=99)return 79.99;
+  if(sub>=50&&sub<=79)return 49.99;
+  return sub;
+}
+function render(){
+  updateCartBadge();
+  const items=Cart.get().map((x,i)=>({...x,i,p:byId(x.id)})).filter(x=>x.p);
+  if(!items.length){
+    $("app").innerHTML=`<div class="empty"><h2>Ton panier est vide</h2><p>Trouve ton prochain maillot dans le catalogue.</p><a href="index.html">Voir les maillots</a></div>`;return;
+  }
+  const sub=Cart.total(), ship=0, total=discountedTotal(sub), hasDiscount=total<sub;
+  const link=CHECKOUT_LINKS[sub];
+  $("app").innerHTML=`<div class="wrap">
+    <div class="items">${items.map(({p,size,q,flock,i})=>`
+      <div class="it">
+        <a href="produit.html?id=${p.id}"><img src="${encodeURI(p.file)}" alt=""></a>
+        <div>
+          <h3><a href="produit.html?id=${p.id}">${p.name}</a></h3>
+          <small>Taille ${size} · Réf. ${p.sku}${flock?` · <span class="fk">${flockLabel(flock)}</span>`:""}</small>
+          <div class="qty"><button data-a="m" data-i="${i}" aria-label="Moins">−</button><span>${q}</span><button data-a="p" data-i="${i}" aria-label="Plus">+</button></div>
+          <button class="rm" data-a="r" data-i="${i}">Supprimer</button>
+        </div>
+        <div class="pr">${eur(p.price*q)}</div>
+      </div>`).join("")}
+    </div>
+    <div class="sum">
+      <h2>Récapitulatif</h2>
+      <div class="row"><span>Sous-total (${Cart.count()} article${Cart.count()>1?"s":""})</span><span>${eur(sub)}</span></div>
+      ${hasDiscount?`<div class="row" style="color:#16a34a"><span>Réduction</span><span>− ${eur(sub-total)}</span></div>`:""}
+      <div class="row"><span>Livraison</span><span>Offerte</span></div>
+      <div class="free" style="color:#16a34a">✓ Livraison offerte, sans minimum d'achat</div>
+      <div class="row t"><span>Total</span><span>${eur(total)}</span></div>
+      <button class="pay" id="pay">Valider la commande</button>
+      <button class="clear" id="clear">Vider le panier</button>
+    </div></div>`;
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-a]");
+  if(b){const a=b.dataset.a,i=+b.dataset.i,l=Cart.get()[i];
+    if(l&&a==="p")Cart.setQAt(i,Math.min(10,l.q+1));
+    if(l&&a==="m")Cart.setQAt(i,l.q-1);
+    if(a==="r")Cart.removeAt(i);
+    render();return}
+  if(e.target.id==="clear"){Cart.set([]);render()}
+  if(e.target.id==="pay"){location.href="livraison.html";}
+});
+render();
+</script>
+</body>
+</html>
