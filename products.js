@@ -283,10 +283,7 @@ const GUIDE={
 const RV_NAMES=["Lucas","Emma","Léo","Chloé","Nathan","Camille","Hugo","Manon","Louis","Sarah","Enzo","Léa","Rayan","Inès","Tom","Jade","Mohamed","Lina","Noah","Zoé","Gabriel","Mia","Adam","Anaïs","Ethan","Yasmine","Maxime","Clara","Jules","Sofia"];
 const RV_TXT={
   5:["Qualité au top, exactement comme sur les photos.","Très content de cet achat, ça taille parfaitement.","Le tissu est agréable et les finitions sont soignées.","Livraison rapide et maillot magnifique, je recommande.","Parfait pour le prochain match, couleurs fidèles.","Le flocage a été ajouté gratuitement, super service."],
-  4:["Très bon maillot, juste un peu grand pour moi.","Beau rendu, le flocage s'est très bien passé.","Content de l'achat, léger retard de livraison seulement.","Bonne qualité dans l'ensemble, je recommande.","Jolie coupe, un poil cher mais ça vaut le coup."],
-  3:["Correct sans plus, le tissu est un peu fin.","Taille un peu différente de ce à quoi je m'attendais.","Conforme à la description, rien d'exceptionnel.","Ça fait le job pour un maillot occasionnel.","Moyen, les couleurs sont un peu différentes des photos."],
-  2:["Déçu par la qualité du tissu pour le prix.","La taille ne correspondait pas vraiment au guide des tailles.","Finitions moyennes, je m'attendais à mieux.","Le col se déforme un peu après lavage.","Pas aussi beau qu'en photo."],
-  1:["Très déçu, la taille ne correspond pas du tout.","Qualité décevante pour le prix payé.","Le colis est arrivé abîmé.","Je ne recommande pas, matière décevante.","Rien à voir avec la photo du site."]
+  4:["Très bon maillot, juste un peu grand pour moi.","Beau rendu, le flocage s'est très bien passé.","Content de l'achat, léger retard de livraison seulement.","Bonne qualité dans l'ensemble, je recommande.","Jolie coupe, un poil cher mais ça vaut le coup."]
 };
 function seedReviews(p){
   const n=p.n, count=n%11; // 0 à 10 avis selon le maillot
@@ -294,7 +291,7 @@ function seedReviews(p){
   for(let i=0;i<count;i++){
     const seed=n*31+i*7;
     const roll=seed%100;
-    const note=roll<40?5:roll<70?4:roll<85?3:roll<95?2:1;
+    const note=roll<60?5:4;
     const nom=RV_NAMES[(seed*3+i)%RV_NAMES.length];
     const txt=RV_TXT[note][(seed+i*5)%RV_TXT[note].length];
     const day=((seed*13+i*17)%340)+1;
