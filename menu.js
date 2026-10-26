@@ -47,7 +47,7 @@
   const ov=document.createElement("div");ov.className="mn-ov";
   const mn=document.createElement("nav");mn.className="mn";mn.setAttribute("aria-label","Menu principal");
   mn.innerHTML=`
-    <div class="mn-h"><b>Fut<span>sy</span></b><button class="mn-x" aria-label="Fermer le menu">×</button></div>
+    <div class="mn-h"><b>Sy<span>foot</span></b><button class="mn-x" aria-label="Fermer le menu">×</button></div>
     <div class="mn-b">
       ${promo}
       <form action="index.html"><input name="q" type="search" placeholder="Rechercher un maillot…" aria-label="Rechercher"><button>OK</button></form>
